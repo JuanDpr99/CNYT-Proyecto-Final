@@ -1,0 +1,63 @@
+import numpy as np
+from qiskit import QuantumCircuit, transpile
+from qiskit import Aer
+from qiskit.visualization import plot_histogram
+import matplotlib.pyplot as plt
+
+def main():
+    # Use Aer's qasm_simulator
+    simulator = Aer.get_backend('qasm_simulator')
+    # Create a Quantum Circuit con 2 entradas y 2 salidas
+    circuit = QuantumCircuit(2, 1)
+
+    # Deutsch's algorithm con Uf balanceada cruzada
+    #----Begin
+    circuit.x(1)
+    circuit.barrier(0,1)
+    circuit.h(0)
+    circuit.h(1)
+    circuit.barrier(0,1)
+    
+    #Uf
+    #Ucruzada(circuit)
+    #Udirecta(circuit)
+    #UTodosCero(circuit)
+    #UTodosUno(circuit)
+
+    circuit.barrier(0,1)
+    circuit.h(0)
+    circuit.barrier(0,1)
+    circuit.measure(0,0) #solo leo el de arriba
+    #----End
+
+    # compile the circuit down to low-level QASM instructions
+    # supported by the backend (not needed for simple circuits)
+    compiled_circuit = transpile(circuit, simulator)
+    # Execute the circuit on the qasm simulator
+    job = simulator.run(compiled_circuit, shots=1000)
+    # Grab results from the job
+    result = job.result()
+
+    # Returns counts
+    counts = result.get_counts(circuit)
+    print("\nTotal count for 00 and 11 are:",counts)
+    # Draw the circuit
+    print(circuit)
+    # Plot a histogram
+    plot_histogram(counts)
+    plt.show()
+
+def Ucruzada(_circuit):
+    _circuit.x(0)
+    _circuit.cx(0,1)   
+    _circuit.x(0)
+
+def Udirecta(_circuit):
+    _circuit.cx(0,1)
+
+def UTodosCero(_circuit):
+    _circuit.i(0)
+    _circuit.i(1)
+    
+def UTodosUno(_circuit):
+    _circuit.x(1)
