@@ -1,3 +1,5 @@
+#### Python
+```python
 import numpy as np
 from qiskit import QuantumCircuit, transpile
 from qiskit import Aer
@@ -61,3 +63,5 @@ def UTodosCero(_circuit):
     
 def UTodosUno(_circuit):
     _circuit.x(1)
+    
+```
